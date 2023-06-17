@@ -10,9 +10,9 @@ class BlocProvider extends InheritedWidget {
   final Timeline timeline;
 
   BlocProvider(
-      {Key key,
-        Timeline t,
-        @required Widget child,
+      {Key? key,
+        required Timeline t,
+        required Widget child,
         TargetPlatform platform = TargetPlatform.iOS})
       : timeline = t ?? Timeline(platform),
         super(key: key, child: child) {
@@ -35,9 +35,9 @@ class BlocProvider extends InheritedWidget {
   /// static accessor for the [Distance].
   /// e.g. [_MainMenuWidgetState.navigateToDistance] uses this static getter to access build the [DistanceWidget].
   static Timeline getTimeline(BuildContext context) {
-    BlocProvider bp =
+    BlocProvider? bp =
     context.dependOnInheritedWidgetOfExactType<BlocProvider>();
-    Timeline bloc = bp?.timeline;
+    Timeline bloc = bp!.timeline;
     return bloc;
   }
 }

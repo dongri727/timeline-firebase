@@ -25,12 +25,12 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
   final TouchEntryCallback touchEntry;
 
   const TimelineRenderWidget(
-      {Key key,
-        this.focusItem,
-        this.touchBubble,
-        this.touchEntry,
-        this.topOverlap,
-        this.timeline,
+      {Key? key,
+        required this.focusItem,
+        required this.touchBubble,
+        required this.touchEntry,
+        required this.topOverlap,
+        required this.timeline,
       })
       : super(key: key);
 
@@ -76,19 +76,19 @@ class TimelineRenderObject extends RenderBox {
 
   double _topOverlap = 0.0;
   final Ticks _ticks = Ticks();
-  Timeline _timeline;
-  MenuItemData _focusItem;
-  MenuItemData _processedFocusItem;
+  Timeline? _timeline;
+  MenuItemData? _focusItem;
+  MenuItemData? _processedFocusItem;
   final List<TapTarget> _tapTargets = [];
-  TouchBubbleCallback touchBubble;
-  TouchEntryCallback touchEntry;
+  late TouchBubbleCallback touchBubble;
+  late TouchEntryCallback touchEntry;
 
   @override
   bool get sizedByParent => true;
 
   double get topOverlap => _topOverlap;
-  Timeline get timeline => _timeline;
-  MenuItemData get focusItem => _focusItem;
+  Timeline get timeline => _timeline!;
+  MenuItemData get focusItem => _focusItem!;
 
   set topOverlap(double value) {
     if (_topOverlap == value) {
@@ -106,7 +106,7 @@ class TimelineRenderObject extends RenderBox {
     }
     _timeline = value;
     updateFocusItem();
-    _timeline.onNeedPaint = markNeedsPaint;
+    _timeline?.onNeedPaint = markNeedsPaint;
     markNeedsPaint();
     markNeedsLayout();
   }
@@ -130,19 +130,19 @@ class TimelineRenderObject extends RenderBox {
     }
 
     /// Adjust the current Timeline padding and consequently the viewport.
-    if (_focusItem.pad) {
+    if (_focusItem!.pad) {
       timeline.padding = EdgeInsets.only(
-          top: topOverlap + _focusItem.padTop + Timeline.parallax,
-          bottom: _focusItem.padBottom);
+          top: topOverlap + _focusItem!.padTop + Timeline.parallax,
+          bottom: _focusItem!.padBottom);
       timeline.setViewport(
-          start: _focusItem.start,
-          end: _focusItem.end,
+          start: _focusItem!.start,
+          end: _focusItem!.end,
           animate: true,
           pad: true);
     } else {
       timeline.padding = EdgeInsets.zero;
       timeline.setViewport(
-          start: _focusItem.start, end: _focusItem.end, animate: true);
+          start: _focusItem!.start, end: _focusItem!.end, animate: true);
     }
     _processedFocusItem = _focusItem;
   }
@@ -150,7 +150,7 @@ class TimelineRenderObject extends RenderBox {
   /// Check if the current tap on the screen has hit a bubble.
   @override
   bool hitTestSelf(Offset screenOffset) {
-    touchEntry(null);
+    //touchEntry(null);
     for (TapTarget bubble in _tapTargets.reversed) {
       if (bubble.rect.contains(screenOffset)) {
         if (touchBubble != null) {
@@ -159,8 +159,7 @@ class TimelineRenderObject extends RenderBox {
         return true;
       }
     }
-    touchBubble(null);
-
+    //touchBubble(null);
     return true;
   }
 
@@ -173,7 +172,7 @@ class TimelineRenderObject extends RenderBox {
   @override
   void performLayout() {
     if (_timeline != null) {
-      _timeline.setViewport(height: size.height, animate: true);
+      _timeline!.setViewport(height: size.height, animate: true);
     }
   }
 
@@ -185,7 +184,7 @@ class TimelineRenderObject extends RenderBox {
     }
 
     /// Fetch the background colors from the [Timeline] and compute the fill.
-    List<TimelineBackgroundColor> backgroundColors = timeline.backgroundColors;
+/*    List<TimelineBackgroundColor> backgroundColors = timeline.backgroundColors;
     ui.Paint backgroundPaint;
     if (backgroundColors != null && backgroundColors.isNotEmpty) {
       double rangeStart = backgroundColors.first.start;
@@ -217,11 +216,11 @@ class TimelineRenderObject extends RenderBox {
       /// Draw the background on the canvas.
       canvas.drawRect(
           Rect.fromLTWH(offset.dx, y1, size.width, y2 - y1), backgroundPaint);
-    }
+    }*/
 
     _tapTargets.clear();
-    double renderStart = _timeline.renderStart;
-    double renderEnd = _timeline.renderEnd;
+    double renderStart = _timeline!.renderStart;
+    double renderEnd = _timeline!.renderEnd;
     double scale = size.height / (renderEnd - renderStart);
 
     /// Paint the [Ticks] on the left side of the screen.
@@ -233,17 +232,17 @@ class TimelineRenderObject extends RenderBox {
     canvas.restore();
 
     /// And then draw the rest of the Timeline.
-    if (_timeline.entries != null) {
+    //if (_timeline.entries != null) {
       canvas.save();
-      canvas.clipRect(Rect.fromLTWH(offset.dx + _timeline.gutterWidth,
-          offset.dy, size.width - _timeline.gutterWidth, size.height));
+      canvas.clipRect(Rect.fromLTWH(offset.dx + _timeline!.gutterWidth,
+          offset.dy, size.width - _timeline!.gutterWidth, size.height));
       drawItems(
           context,
           offset,
-          _timeline.entries,
-          _timeline.gutterWidth +
-              timeline.lineSpacing -
-              timeline.depthOffset * _timeline.renderOffsetDepth,
+          _timeline!.entries,
+          _timeline!.gutterWidth +
+              Timeline.lineSpacing -
+              Timeline.depthOffset * _timeline!.renderOffsetDepth,
           scale,
           0);
       canvas.restore();
@@ -253,7 +252,7 @@ class TimelineRenderObject extends RenderBox {
     /// an arrow pointing to the next event on the Timeline will appear on the bottom of the screen.
     /// Draw it, and add it as another [TapTarget].
     /// 下向きボタン
-    if (_timeline.nextEntry != null && _timeline.nextEntryOpacity > 0.0) {
+/*    if (_timeline.nextEntry != null && _timeline.nextEntryOpacity > 0.0) {
       double x = offset.dx + _timeline.gutterWidth - Timeline.gutterLeft;
       double opacity = _timeline.nextEntryOpacity;
       Color color = Color.fromRGBO(154, 205, 50, opacity);
@@ -410,7 +409,7 @@ class TimelineRenderObject extends RenderBox {
         ..rect = prevEntryRect
         ..zoom = true);
     }
-  }
+  }*/
 
   /// Given a list of [entries], draw the label with its bubble beneath.
   /// Draw also the dots&lines on the left side of the Timeline. These represent
@@ -445,13 +444,13 @@ class TimelineRenderObject extends RenderBox {
               .withOpacity(legOpacity);
 
         /// Draw the line connecting the start&point of this item on the Timeline.
-        canvas.drawRect(
+/*        canvas.drawRect(
             Offset(x, item.y) & Size(Timeline.lineWidth, item.length),
             legPaint);
         canvas.drawCircle(
             Offset(x + Timeline.lineWidth / 2.0, item.y + item.length),
             Timeline.edgeRadius,
-            legPaint);
+            legPaint);*/
       }
 
       const double maxLabelWidth = 1200.0;
@@ -472,8 +471,8 @@ class TimelineRenderObject extends RenderBox {
 
       double textWidth =
           labelParagraph.maxIntrinsicWidth * item.opacity * item.labelOpacity;
-      double bubbleX = _timeline.renderLabelX -
-          Timeline.depthOffset * _timeline.renderOffsetDepth;
+      double bubbleX = _timeline!.renderLabelX -
+          Timeline.depthOffset * _timeline!.renderOffsetDepth;
       double bubbleY = item.labelY - bubbleHeight / 2.0;
 
       canvas.save();

@@ -34,7 +34,7 @@ class Ticks {
 
     /// The width of the left panel can expand and contract if the favorites-view is activated,
     /// by pressing the button on the top-right corner of the Timeline.
-    /// ただしこのアプリにfavorites機能はない
+    /// ただしこのアプリにfavorites機能はない でも計算に使う
     double gutterWidth = timeline.gutterWidth;
 
     /// Calculate spacing based on current scale
@@ -73,7 +73,7 @@ class Ticks {
     /// Ticks can change color because the Timeline background will also change color
     /// depending on the current era. The [TickColors] object, in `distance_utils.dart`,
     /// wraps this information.
-    List<TickColors> tickColors = timeline.tickColors;
+/*    List<TickColors> tickColors = timeline.tickColors;
     if (tickColors != null && tickColors.isNotEmpty) {
       /// Build up the color stops for the linear gradient.
       double rangeStart = tickColors.first.start;
@@ -83,18 +83,22 @@ class Ticks {
       for (TickColors bg in tickColors) {
         colors.add(bg.background);
         stops.add((bg.start - rangeStart) / range);
-      }
+      }*/
       double s =
       timeline.computeScale(timeline.renderStart, timeline.renderEnd);
 
       /// y-coordinate for the starting and ending element.
+      double y1 = timeline.renderStart * s;
+      double y2 = timeline.renderStart * s;
+
+/*      /// y-coordinate for the starting and ending element.
       double y1 = (tickColors.first.start - timeline.renderStart) * s;
-      double y2 = (tickColors.last.start - timeline.renderStart) * s;
+      double y2 = (tickColors.last.start - timeline.renderStart) * s;*/
 
       /// Fill Background.
       ui.Paint paint = ui.Paint()
-        ..shader = ui.Gradient.linear(
-            ui.Offset(0.0, y1), ui.Offset(0.0, y2), colors, stops)
+/*        ..shader = ui.Gradient.linear(
+            ui.Offset(0.0, y1), ui.Offset(0.0, y2), colors, stops)*/
         ..style = ui.PaintingStyle.fill;
 
       /// Fill in top/bottom if necessary.
@@ -102,23 +106,24 @@ class Ticks {
         canvas.drawRect(
             Rect.fromLTWH(
                 offset.dx, offset.dy, gutterWidth, y1 - offset.dy + 1.0),
-            ui.Paint()..color = tickColors.first.background);
+            ui.Paint()/*..color = tickColors.first.background*/);
       }
       if (y2 < offset.dy + height) {
         canvas.drawRect(
             Rect.fromLTWH(
                 offset.dx, y2 - 1, gutterWidth, (offset.dy + height) - y2),
-            ui.Paint()..color = tickColors.last.background);
+            ui.Paint()/*..color = tickColors.last.background*/);
       }
 
       /// Draw the gutter.
-      canvas.drawRect(
+/*      canvas.drawRect(
           Rect.fromLTWH(offset.dx, y1, gutterWidth, y2 - y1), paint);
-    } else {
+    } else {*/
       canvas.drawRect(Rect.fromLTWH(offset.dx, offset.dy, gutterWidth, height),
           Paint()..color = const Color.fromRGBO(246, 246, 246, 0.95));
-    }
+    //}
 
+    ///文字の描画？
     Set<String> usedValues = Set<String>();
 
     /// Draw all the ticks.
@@ -128,13 +133,13 @@ class Ticks {
       int tt = startingTickMarkValue.round();
       tt = -tt;
       int o = tickOffset.floor();
-      TickColors colors = timeline.findTickColors(offset.dy + height - o);
+      TickColors? colors = timeline.findTickColors(offset.dy + height - o);
       if (tt % textTickDistance == 0) {
         /// Every `textTickDistance`, draw a wider tick with the a label laid on top.
         canvas.drawRect(
             Rect.fromLTWH(offset.dx + gutterWidth - tickSize,
                 offset.dy + height - o, tickSize, 1.0),
-            Paint()..color = colors.long);
+            Paint()..color = colors!.long);
 
         /// Drawing text to [canvas] is done by using the [ParagraphBuilder] directly.
         ui.ParagraphBuilder builder = ui.ParagraphBuilder(ui.ParagraphStyle(
@@ -150,8 +155,8 @@ class Ticks {
         } else {
           NumberFormat formatter = NumberFormat.compact();
           label = formatter.format(value);
-          int digits = formatter.minimumSignificantDigits;
-          while (usedValues.contains(label) && digits < 10) {
+          int? digits = formatter.minimumSignificantDigits;
+          while (usedValues.contains(label) && digits! < 10) {
             formatter.minimumSignificantDigits = ++digits;
             label = formatter.format(value);
           }
@@ -170,7 +175,7 @@ class Ticks {
         canvas.drawRect(
             Rect.fromLTWH(offset.dx + gutterWidth - smallTickSize,
                 offset.dy + height - o, smallTickSize, 1.0),
-            Paint()..color = colors.short);
+            Paint()..color = colors!.short);
       }
       startingTickMarkValue += tickDistance;
     }

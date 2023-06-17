@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
+import 'package:flutter/material.dart';
 import "package:flutter/services.dart" show rootBundle;
 
 import '../timeline/entry.dart';
@@ -9,17 +10,17 @@ import '../timeline/entry.dart';
 
 /// Data container for the Section loaded in [MenuData.loadFromBundle()].
 class MenuSectionData {
-  String label;
-  Color textColor;
-  Color backgroundColor;
+  late String label;
+  Color textColor = Colors.white;
+  Color backgroundColor = Colors.green;
   List<MenuItemData> items = [];
 }
 
 /// Data container for all the sub-elements of the [MenuSection].
 class MenuItemData {
-  String label;
-  double start;
-  double end;
+  String label = "";
+  double start = 0.0;
+  double end = 0.0;
   bool pad = false;
   double padTop = 0.0;
   double padBottom = 0.0;
@@ -42,7 +43,7 @@ class MenuItemData {
     } else {
       /// No need to pad here as we are centering on a single item.
       double rangeBefore = double.maxFinite;
-      for (TimelineEntry prev = entry.previous;
+      for (TimelineEntry? prev = entry.previous;
       prev != null;
       prev = prev.previous) {
         double diff = entry.start - prev.start;
@@ -53,7 +54,7 @@ class MenuItemData {
       }
 
       double rangeAfter = double.maxFinite;
-      for (TimelineEntry next = entry.next; next != null; next = next.next) {
+      for (TimelineEntry? next = entry.next; next != null; next = next.next) {
         double diff = next.start - entry.start;
         if (diff > 0.0) {
           rangeAfter = diff;

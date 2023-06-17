@@ -1,27 +1,30 @@
 import 'dart:ui' as ui;
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 /// An object representing the renderable assets loaded from `timeline.json`.
 ///
 /// Each [TimelineAsset] encapsulates all the relevant properties for drawing,
 /// as well as maintaining a reference to its original [TimelineEntry].
 class TimelineAsset {
-  double width;
-  double height;
+  double? width;
+  double? height;
   double opacity = 0.0;
   double scale = 0.0;
   double scaleVelocity = 0.0;
   double y = 0.0;
   double velocity = 0.0;
-  TimelineEntry entry;
+  TimelineEntry? entry;
 }
-
+/*
 /// A renderable image.
 class TimelineImage extends TimelineAsset {
   ui.Image image;
-}
+}*/
 
 /// A label for [TimelineEntry].
+/// なんだかわからないけど消すとまずい
 enum TimelineEntryType { position, material }
 
 /// Each entry in the Timeline is represented by an instance of this object.
@@ -30,28 +33,28 @@ enum TimelineEntryType { position, material }
 ///
 /// They are all initialized at startup time by the [BlocProvider] constructor.
 class TimelineEntry {
-  TimelineEntryType type;
+  late TimelineEntryType type;
 
-  /// Used to calculate how many lines to draw for the bubble in the Timeline.
-  int lineCount = 1;
+/*  /// Used to calculate how many lines to draw for the bubble in the Timeline.
+  int lineCount = 1;*/
 
-  String _label;
-  Color accent;
+  late String _label;
+  Color accent = Colors.blueGrey;
 
   /// Each entry constitues an element of a tree:
   /// positions are grouped into spanning positions and events are placed into the positions they belong to.
-  TimelineEntry parent;
-  List<TimelineEntry> children;
+  TimelineEntry? parent;
+  List<TimelineEntry> children = [];
 
   /// All the Timeline entries are also linked together to easily access the next/previous element.
   /// After a couple of seconds of inactivity on the Timeline, a previous/next entry button will appear
   /// to allow the user to navigate faster between adjacent element.
-  TimelineEntry next;
-  TimelineEntry previous;
+  TimelineEntry? next;
+  TimelineEntry? previous;
 
   /// All these parameters are used by the [Timeline] object to properly position the current entry.
-  double start;
-  double end;
+  late double start;
+  late double end;
   double y = 0.0;
   double endY = 0.0;
   double length = 0.0;
@@ -74,36 +77,36 @@ class TimelineEntry {
   set label(String value) {
     _label = value;
     int start = 0;
-    lineCount = 1;
+    //lineCount = 1;
     while (true) {
       start = _label.indexOf("\n", start);
       if (start == -1) {
         break;
       }
-      lineCount++;
+      //lineCount++;
       start++;
     }
   }
 
   /// Pretty-printing for the entry position.
   /// 前のobjectまでの距離を表示
-  String formatFarAway() {
+/*  String formatFarAway() {
     if (start > 0) {
       return start.round().toString();
     }
     return TimelineEntry.formatTimeline(start);
-  }
+  }*/
 
   /// Debug information.
-  @override
+/*  @override
   String toString() {
     return "Timeline ENTRY: $label -($start,$end)";
-  }
+  }*/
 
   /// Helper method.
   /// object間の距離を算出
   ///メモリ表示と等しい10cm単位
-  static String formatTimeline(double start) {
+/*  static String formatTimeline(double start) {
     String label;
     int valueAbs = start.round().abs();
     if (valueAbs > 1000000000) {
@@ -124,5 +127,5 @@ class TimelineEntry {
       label = valueAbs.toStringAsFixed(0);
     }
     return "$label decimetres";
-  }
+  }*/
 }

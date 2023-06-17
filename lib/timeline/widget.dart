@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../color.dart';
 import '../menu/menu_data.dart';
 import 'entry.dart';
 import 'timeline.dart';
@@ -16,7 +15,7 @@ typedef SelectItemCallback = Function(TimelineEntry item);
 class TimelineWidget extends StatefulWidget {
   final MenuItemData focusItem;
   final Timeline timeline;
-  const TimelineWidget(this.focusItem, this.timeline, {Key key}) : super(key: key);
+  const TimelineWidget(this.focusItem, this.timeline, {Key? key}) : super(key: key);
 
   @override
   TimelineWidgetState createState() => TimelineWidgetState();
@@ -28,24 +27,26 @@ class TimelineWidgetState extends State<TimelineWidget> {
 
   /// These variables are used to calculate the correct viewport for the Timeline
   /// when performing a scaling operation as in [_scaleStart], [_scaleUpdate], [_scaleEnd].
-  Offset _lastFocalPoint;
+  late Offset _lastFocalPoint;
   double _scaleStartYearStart = -100.0;
   double _scaleStartYearEnd = 100.0;
 
   /// When touching a bubble on the [Timeline] keep track of which
   /// element has been touched in order to move to the [article_widget].
-  TapTarget _touchedBubble;
-  TimelineEntry _touchedEntry;
+  TapTarget? _touchedBubble;
+  TimelineEntry? _touchedEntry;
 
-  /// Which position the Timeline is currently focused on.
+/*  /// Which position the Timeline is currently focused on.
   /// Defaults to [DefaultPositionName].
-  String _positionName;
+  String _positionName;*/
 
   /// Syntactic-sugar-getter.
   Timeline get timeline => widget.timeline;
 
+/*
   Color _headerTextColor;
   Color _headerBackgroundColor;
+*/
 
 
   /// The following three functions define are the callbacks used by the
@@ -65,7 +66,7 @@ class TimelineWidgetState extends State<TimelineWidget> {
   void _scaleUpdate(ScaleUpdateDetails details) {
     double changeScale = details.scale;
     double scale =
-        (_scaleStartYearEnd - _scaleStartYearStart) / context.size.height;
+        (_scaleStartYearEnd - _scaleStartYearStart) / context.size!.height;
 
     double focus = _scaleStartYearStart + details.focalPoint.dy * scale;
     double focalDiff =
@@ -73,7 +74,7 @@ class TimelineWidgetState extends State<TimelineWidget> {
     timeline.setViewport(
         start: focus + (_scaleStartYearStart - focus) / changeScale + focalDiff,
         end: focus + (_scaleStartYearEnd - focus) / changeScale + focalDiff,
-        height: context.size.height,
+        height: context.size!.height,
         animate: true);
   }
 
@@ -107,8 +108,8 @@ class TimelineWidgetState extends State<TimelineWidget> {
   void _tapUp(TapUpDetails details) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     if (_touchedBubble != null) {
-      if (_touchedBubble.zoom) {
-        MenuItemData target = MenuItemData.fromEntry(_touchedBubble.entry);
+      if (_touchedBubble!.zoom) {
+        MenuItemData target = MenuItemData.fromEntry(_touchedBubble!.entry);
 
         timeline.padding = EdgeInsets.only(
             top: topOverlap +
@@ -129,7 +130,7 @@ class TimelineWidgetState extends State<TimelineWidget> {
   void _longPress() {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     if (_touchedBubble != null) {
-      MenuItemData target = MenuItemData.fromEntry(_touchedBubble.entry);
+      MenuItemData target = MenuItemData.fromEntry(_touchedBubble!.entry);
 
       timeline.padding = EdgeInsets.only(
           top: topOverlap +
@@ -145,9 +146,9 @@ class TimelineWidgetState extends State<TimelineWidget> {
   @override
   initState() {
     super.initState();
-    if (timeline != null) {
+    //if (timeline != null) {
       widget.timeline.isActive = true;
-      _positionName = timeline.currentPosition != null
+/*      _positionName = timeline.currentPosition != null
           ? timeline.currentPosition.label
           : defaultPositionName;
       timeline.onHeaderColorsChanged = (Color background, Color text) {
@@ -166,7 +167,7 @@ class TimelineWidgetState extends State<TimelineWidget> {
 
       _headerTextColor = timeline.headerTextColor;
       _headerBackgroundColor = timeline.headerBackgroundColor;
-    }
+    }*/
   }
 
   /// Update the current view and change the Timeline header, color and background color,
@@ -174,7 +175,7 @@ class TimelineWidgetState extends State<TimelineWidget> {
   void didUpdateWidget(covariant TimelineWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (timeline != oldWidget.timeline && timeline != null) {
+/*    if (timeline != oldWidget.timeline && timeline != null) {
       setState(() {
         _headerTextColor = timeline.headerTextColor;
         _headerBackgroundColor = timeline.headerBackgroundColor;
@@ -195,7 +196,7 @@ class TimelineWidgetState extends State<TimelineWidget> {
         _positionName =
             timeline.currentPosition ?? defaultPositionName;
       });
-    }
+    }*/
   }
 
   /// This is a [StatefulWidget] life-cycle method. It's being overridden here
@@ -203,10 +204,10 @@ class TimelineWidgetState extends State<TimelineWidget> {
   @override
   deactivate() {
     super.deactivate();
-    if (timeline != null) {
+/*    if (timeline != null) {
       timeline.onHeaderColorsChanged = null;
       timeline.onPositionChanged = null;
-    }
+    }*/
   }
 
   /// This widget is wrapped in a [Scaffold] to have the classic Material Design visual layout structure.
@@ -218,11 +219,11 @@ class TimelineWidgetState extends State<TimelineWidget> {
   @override
   Widget build(BuildContext context) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
-    if (timeline != null) {
+/*    if (timeline != null) {
       timeline.devicePadding = devicePadding;
-    }
+    }*/
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       body: GestureDetector(
           onLongPress: _longPress,
           onTapDown: _tapDown,
@@ -243,10 +244,10 @@ class TimelineWidgetState extends State<TimelineWidget> {
                 children: <Widget>[
                   Container(
                       height: devicePadding.top,
-                      color: _headerBackgroundColor ?? const Color.fromRGBO(238, 240, 242, 0.81)
+                      color: Color(0x99E9E9E9),
                   ),
                   Container(
-                      color: _headerBackgroundColor ?? const Color.fromRGBO(238, 240, 242, 0.81),
+                      color: Color(0x99E9E9E9),
                       height: 56.0,
                       width: double.infinity,
                       child: Row(
@@ -254,7 +255,7 @@ class TimelineWidgetState extends State<TimelineWidget> {
                           children: <Widget>[
                             IconButton(
                               padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                              color: _headerTextColor ?? Colors.black.withOpacity(0.5),
+                              //color: _headerTextColor ?? Colors.black.withOpacity(0.5),
                               alignment: Alignment.centerLeft,
                               icon: const Icon(Icons.arrow_back),
                               onPressed: () {
@@ -263,15 +264,13 @@ class TimelineWidgetState extends State<TimelineWidget> {
                                 //return true;
                               },
                             ),
-                            Text(
-                              _positionName,
+                            const Text(
+                              "TIMELINE",
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontSize: 20.0,
-                                  color: _headerTextColor ?? darkText.withOpacity(
-                                      darkText.opacity * 0.75)
+                                  ),
                               ),
-                            ),
                           ]))
                 ])
           ])),
