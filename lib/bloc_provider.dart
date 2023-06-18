@@ -14,17 +14,17 @@ class BlocProvider extends InheritedWidget {
         required Timeline t,
         required Widget child,
         TargetPlatform platform = TargetPlatform.iOS})
-      : timeline = t ?? Timeline(platform),
+      : timeline = t,
         super(key: key, child: child) {
     timeline
-        .loadFromBundle("assets/distance.json")
+        .loadFromBundle("assets/timeline.json")
         .then((List<TimelineEntry> entries) {
       timeline.setViewport(
           start: entries.first.start * 2.0,
           end: entries.first.start,
           animate: true);
 
-      /// Advance the distance to its starting position.
+      /// Advance the Timeline to its starting position.
       timeline.advance(0.0, false);
     });
   }
@@ -32,8 +32,8 @@ class BlocProvider extends InheritedWidget {
   @override
   updateShouldNotify(InheritedWidget oldWidget) => true;
 
-  /// static accessor for the [Distance].
-  /// e.g. [_MainMenuWidgetState.navigateToDistance] uses this static getter to access build the [DistanceWidget].
+  /// static accessor for the [Timeline].
+  /// e.g. [_MainMenuWidgetState.navigateToDistance] uses this static getter to access build the [TimelineWidget].
   static Timeline getTimeline(BuildContext context) {
     BlocProvider? bp =
     context.dependOnInheritedWidgetOfExactType<BlocProvider>();

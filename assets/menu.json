@@ -1,0 +1,40 @@
+[
+  {
+    "label": "Initial Display Era\n    You can move, zoom freely\n         after the transition",
+    "background": "#9acd32",
+    "color": "#2f4f4f",
+    "items":
+    [
+      {
+        "start": -17000000000,
+        "end": -1000000000,
+        "label": "Billion Years Ago"
+      },
+      {
+        "start": -1000000000,
+        "end": -1000000,
+        "label": "Million Years Ago"
+      },
+      {
+        "start": -1000000,
+        "end": -5000,
+        "label": "Thousand Years Ago"
+      },
+      {
+        "start": -5000,
+        "end": 1900,
+        "label": "Historical Years"
+      },
+      {
+        "start": 1900,
+        "end": 2000,
+        "label": "20th Century"
+      },
+      {
+        "start": 2000,
+        "end": 2100,
+        "label": "21th Century"
+      }
+    ]
+  }
+]

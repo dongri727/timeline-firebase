@@ -68,7 +68,7 @@ class MainMenuWidgetState extends State<MainMenuWidget> {
     /// A [SingleChildScrollView] is used to create a scrollable view for the main menu.
     return Scaffold(
       appBar: AppBar(
-        title: const Text("DISTANCE"),
+        title: const Text("TIMELINE"),
       ),
       body: Padding(
         padding: EdgeInsets.only(top: devicePadding.top),
