@@ -465,7 +465,7 @@ class TimelineRenderObject extends RenderBox {
         ..pushStyle(
             ui.TextStyle(color: const Color.fromRGBO(255, 255, 255, 1.0)));
 
-      builder.addText(item.label);
+      builder.addText(item.name);
       ui.Paragraph labelParagraph = builder.build();
       labelParagraph.layout(const ui.ParagraphConstraints(width: maxLabelWidth));
 

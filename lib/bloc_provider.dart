@@ -17,7 +17,8 @@ class BlocProvider extends InheritedWidget {
       : timeline = t,
         super(key: key, child: child) {
     timeline
-        .loadFromBundle("assets/timeline.json")
+        //.loadFromBundle("assets/timeline.json")
+        .loadFromFirestore("events")
         .then((List<TimelineEntry> entries) {
       timeline.setViewport(
           start: entries.first.start * 2.0,

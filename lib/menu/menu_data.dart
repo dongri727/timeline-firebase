@@ -32,7 +32,7 @@ class MenuItemData {
   /// a [label], a [start] and [end] times.
   /// Padding is built depending on the type of the [entry] provided.
   MenuItemData.fromEntry(TimelineEntry entry) {
-    label = entry.label;
+    label = entry.name;
 
     /// Pad the edges of the screen.
     pad = true;

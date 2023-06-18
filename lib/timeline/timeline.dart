@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -82,10 +83,10 @@ class Timeline {
 
   Timer? _steadyTimer;
 
-  /// Through these two references, the Timeline can access the position and update
+  /// Through these two references, the Timeline can access the era and update
   /// the top label accordingly.
-/*  TimelineEntry _currentPosition;
-  TimelineEntry _lastPosition;*/
+/*  TimelineEntry _currentEra;
+  TimelineEntry _lastEra;*/
 
   ///前の事象次の事象Button
   /// These references allow to maintain a reference to the next and previous elements
@@ -97,7 +98,7 @@ class Timeline {
   TimelineEntry? _prevEntry;
   TimelineEntry? _renderPrevEntry;
 
-  /// A gradient is shown on the background, depending on the [_currentPosition] we're in.
+  /// A gradient is shown on the background, depending on the [_currentEra] we're in.
   /// グラデーション
   //List<TimelineBackgroundColor> _backgroundColors;
 
@@ -115,7 +116,7 @@ class Timeline {
   /// These next two callbacks are bound to set the state of the [TimelineWidget]
   /// so it can change the appearance of the top AppBar.
   /// appBarの領域表示
-/*  ChangePositionCallback onPositionChanged;
+/*  ChangePositionCallback onEraChanged;
   ChangeHeaderColorCallback onHeaderColorsChanged;*/
 
   Timeline(this._platform) {
@@ -217,9 +218,12 @@ class Timeline {
   ///
   /// This function will load and decode `timeline.json` from disk,
   /// decode the JSON file, and populate all the [TimelineEntry]s.
-  Future<List<TimelineEntry>> loadFromBundle(String filename) async {
+  ///
+  ///
+  Future<List<TimelineEntry>> loadFromFirestore(String collectionPath) async {
+/*  Future<List<TimelineEntry>> loadFromBundle(String filename) async {
     String data = await rootBundle.loadString(filename);
-    List jsonEntries = json.decode(data) as List;
+    List jsonEntries = json.decode(data) as List;*/
 
     List<TimelineEntry> allEntries = [];
     //_backgroundColors = [];
@@ -228,8 +232,13 @@ class Timeline {
 
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic entries in the [jsonEntries] list.
-    for (dynamic entry in jsonEntries) {
-      Map map = entry as Map;
+/*    for (dynamic entry in jsonEntries) {
+      Map map = entry as Map;*/
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(collectionPath).get();
+    List<DocumentSnapshot> docSnapshots = querySnapshot.docs;
+
+    for (DocumentSnapshot docSnapshot in docSnapshots) {
+      Map<String, dynamic> map = docSnapshot.data() as Map<String, dynamic>;
 
       /// Sanity check.
       if (map != null) {
@@ -237,12 +246,12 @@ class Timeline {
         /// an `material`, or look for the `start` property if it's a `Position` instead.
         /// Some entries will have a `start` element, but not an `end` specified.
         TimelineEntry timelineEntry = TimelineEntry();
-        if (map.containsKey("point")) {
+        if (map.containsKey("year")) {
           timelineEntry.type = TimelineEntryType.material;
-          dynamic point = map["point"];
-          timelineEntry.start = point is int ? point.toDouble() : point;
+          dynamic year = map["year"];
+          timelineEntry.start = year is int ? year.toDouble() : year;
         }/* else if (map.containsKey("start")) {
-          timelineEntry.type = TimelineEntryType.position;
+          timelineEntry.type = TimelineEntryType.Era;
           dynamic start = map["start"];
 
           timelineEntry.start = start is int ? start.toDouble() : start;
@@ -274,7 +283,7 @@ class Timeline {
               accent[2] as int);
         }*/
 
-        /// [Ticks] can also have custom colors, so that everything's is visible
+/*        /// [Ticks] can also have custom colors, so that everything's is visible
         /// even with custom colored backgrounds.
         if (map.containsKey("ticks")) {
           dynamic ticks = map["ticks"];
@@ -284,11 +293,11 @@ class Timeline {
             Color shortColor = Colors.black;
             Color textColor = Colors.black;
 
-/*            dynamic bg = ticks["background"];
+*//*            dynamic bg = ticks["background"];
             if (bg is List && bg.length >= 3) {
               bgColor = Color.fromARGB(bg.length > 3 ? bg[3] as int : 255,
                   bg[0] as int, bg[1] as int, bg[2] as int);
-            }*/
+            }*//*
             dynamic long = ticks["long"];
             if (long is List && long.length >= 3) {
               longColor = Color.fromARGB(long.length > 3 ? long[3] as int : 255,
@@ -316,7 +325,16 @@ class Timeline {
               ..start = timelineEntry.start
               ..screenY = 0.0);
           }
-        }
+        }*/
+        TickColors tickColors = TickColors()
+          ..long = Colors.black
+          ..short = Colors.black
+          ..text = Colors.black
+          ..start = timelineEntry.start
+          ..screenY = 0.0;
+
+
+        _tickColors.add(tickColors);
 
         /// If a `header` element is present, de-serialize the colors for it too.
 /*        if (map.containsKey("header")) {
@@ -357,8 +375,8 @@ class Timeline {
         //}
 
         /// The label is a brief description for the current entry.
-        if (map.containsKey("label")) {
-          timelineEntry.label = map["label"] as String;
+        if (map.containsKey("name")) {
+          timelineEntry.name = map["name"] as String;
         }
 
         /// Add this entry to the list.
@@ -655,7 +673,7 @@ class Timeline {
     scale = _height / (_renderEnd - _renderStart);
 
     /// Update color screen positions.
-    if (_tickColors != null && _tickColors.isNotEmpty) {
+/*    if (_tickColors != null && _tickColors.isNotEmpty) {
       double lastStart = _tickColors.first.start;
       for (TickColors color in _tickColors) {
         color.screenY =
@@ -663,7 +681,7 @@ class Timeline {
                 scale;
         lastStart = color.start;
       }
-    }
+    }*/
 /*    if (_headerColors != null && _headerColors.isNotEmpty) {
       double lastStart = _headerColors.first.start;
       for (HeaderColors color in _headerColors) {

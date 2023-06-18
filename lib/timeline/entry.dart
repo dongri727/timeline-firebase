@@ -38,7 +38,7 @@ class TimelineEntry {
 /*  /// Used to calculate how many lines to draw for the bubble in the Timeline.
   int lineCount = 1;*/
 
-  late String _label;
+  late String _name;
   Color accent = Colors.blueGrey;
 
   /// Each entry constitues an element of a tree:
@@ -70,16 +70,16 @@ class TimelineEntry {
     return opacity > 0.0;
   }
 
-  String get label => _label;
+  String get name => _name;
 
   /// Some labels already have newline characters to adjust their alignment.
   /// Detect the occurrence and add information regarding the line-count.
-  set label(String value) {
-    _label = value;
+  set name(String value) {
+    _name = value;
     int start = 0;
     //lineCount = 1;
     while (true) {
-      start = _label.indexOf("\n", start);
+      start = _name.indexOf("\n", start);
       if (start == -1) {
         break;
       }
