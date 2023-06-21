@@ -1,11 +1,10 @@
-import "dart:developer";
 import "package:flutter/widgets.dart";
 import "timeline/entry.dart";
 import 'timeline/timeline.dart';
 
 
 /// This [InheritedWidget] wraps the whole app, and provides access
-/// to the [Distance] object.
+/// to the [Timeline] object.
 class BlocProvider extends InheritedWidget {
   final Timeline timeline;
 
@@ -17,7 +16,6 @@ class BlocProvider extends InheritedWidget {
       : timeline = t,
         super(key: key, child: child) {
     timeline
-        //.loadFromBundle("assets/timeline.json")
         .loadFromFirestore("events")
         .then((List<TimelineEntry> entries) {
       timeline.setViewport(
@@ -38,7 +36,12 @@ class BlocProvider extends InheritedWidget {
   static Timeline getTimeline(BuildContext context) {
     BlocProvider? bp =
     context.dependOnInheritedWidgetOfExactType<BlocProvider>();
-    Timeline bloc = bp!.timeline;
-    return bloc;
+
+    //if (bp != null) {
+      Timeline bloc = bp!.timeline;
+      return bloc;
+/*    } else {
+      throw Exception('Unable to get BlocProvider from context');
+    }*/
   }
 }

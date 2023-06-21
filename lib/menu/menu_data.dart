@@ -37,7 +37,7 @@ class MenuItemData {
     /// Pad the edges of the screen.
     pad = true;
 
-    if (entry.type == TimelineEntryType.position) {
+    if (entry.type == TimelineEntryType.era) {
       start = entry.start;
       end = entry.end;
     } else {
@@ -72,8 +72,8 @@ class MenuItemData {
 /// de-serializing the JSON file appropriately.
 ///
 /// `menu.json` contains an array of objects, each with:
-/// * label - the title for the section
-/// * background - the color on the section background
+/// * label - the title for the list-tile
+/// * background - the color on the list-tile background
 /// * color - the text color
 /// * items - an array of elements providing each the start and end times for that link
 /// as well as the label to display in the [MenuSection].

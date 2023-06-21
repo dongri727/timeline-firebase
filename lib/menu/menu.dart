@@ -2,11 +2,12 @@ import "package:flutter/material.dart";
 
 import "../bloc_provider.dart";
 import "../timeline/widget.dart";
+import "../ttf_format.dart";
 import "menu_data.dart";
 import "menu_section.dart";
 
-/// The Base Page of the Distance App.
-/// the card-sections for accessing the main events on the Distance,
+/// The Base Page of the Timeline App.
+
 class MainMenuWidget extends StatefulWidget {
   const MainMenuWidget({Key? key}) : super(key: key);
 
@@ -16,16 +17,14 @@ class MainMenuWidget extends StatefulWidget {
 
 class MainMenuWidgetState extends State<MainMenuWidget> {
 
-  /// [MenuData] is a wrapper object for the data of each Card section.
+  /// [MenuData] selects era witch will be displayed at the Timeline
   /// This data is loaded from the asset bundle during [initState()]
   final MenuData _menu = MenuData();
 
-  /// Helper function which sets the [MenuItemData] for the [DistanceWidget].
-  /// This will trigger a transition from the current menu to the Distance,
-  /// thus the push on the [Navigator], and by providing the [item] as
-  /// a parameter to the [DistanceWidget] constructor, this widget will know
-  /// where to scroll to.
-  navigateToDistance(MenuItemData item) {
+  /// Helper function which sets the [MenuItemData] for the [TimelineWidget].
+  /// This will trigger a transition from the current menu to the Timeline,
+  /// thus the push on the [Navigator], this widget will know where to scroll to.
+  navigateToTimeline(MenuItemData item) {
     Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (BuildContext context) =>
@@ -38,9 +37,7 @@ class MainMenuWidgetState extends State<MainMenuWidget> {
     super.initState();
 
     /// The [_menu] loads a JSON file that's stored in the assets folder.
-    /// This asset provides all the necessary information for the cards,
-    /// such as labels, background colors,
-    /// and for each element in the expanded card, the relative position on the [Distance].
+    /// This asset provides all the necessary information.
     _menu.loadFromBundle("assets/menu.json").then((bool success) {
       if (success) setState(() {}); // Load the menu.
     });
@@ -61,24 +58,30 @@ class MainMenuWidgetState extends State<MainMenuWidget> {
           section.backgroundColor,
           section.textColor,
           section.items,
-          navigateToDistance,
+          navigateToTimeline,
         )))
-        .toList(growable: false));
+        .toList(growable: false)
+        );
 
-    /// A [SingleChildScrollView] is used to create a scrollable view for the main menu.
     return Scaffold(
       appBar: AppBar(
         title: const Text("TIMELINE"),
       ),
       body: Padding(
         padding: EdgeInsets.only(top: devicePadding.top),
-        child: SingleChildScrollView(
-            padding:
-            const EdgeInsets.only(top: 20.0, left: 20, right: 20, bottom: 20),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[] + tail)),
-      ),
-    );
+        child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: FormatGrey(
+                    hintText: "Search Term",
+                    onChanged: (text) {},
+                  ),
+                ),
+              ] + tail),
+        ),
+      );
+
   }
 }

@@ -9,8 +9,6 @@ import 'ticks.dart';
 import 'utils.dart';
 
 /// These two callbacks are used to detect if a bubble or an entry have been tapped.
-/// If that's the case, [ArticlePage] will be pushed onto the [Navigator] stack.
-/// どちらのページにも遷移する必要はないが、無効化すると前後ボタンが効かなくなる。
 typedef TouchBubbleCallback = Function(TapTarget bubble);
 typedef TouchEntryCallback = Function(TimelineEntry entry);
 
@@ -67,11 +65,11 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
 /// are actually drawn to screen.
 class TimelineRenderObject extends RenderBox {
   static const List<Color> lineColors = [
-    Color.fromARGB(200, 125, 195, 184),
+/*    Color.fromARGB(200, 125, 195, 184),
     Color.fromARGB(200, 190, 224, 146),
     Color.fromARGB(200, 238, 155, 75),
     Color.fromARGB(200, 202, 79, 63),
-    Color.fromARGB(200, 128, 28, 15)
+    Color.fromARGB(200, 128, 28, 15)*/
   ];
 
   double _topOverlap = 0.0;
