@@ -20,12 +20,15 @@ class MenuSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-     ListTile(
-       title: Text(
-         title,
-         style: TextStyle(
-           fontSize: 20.0,
-           color: accentColor,
+     Padding(
+       padding: const EdgeInsets.fromLTRB(50,10,50,10),
+       child: ListTile(
+         title: Text(
+           title,
+           style: TextStyle(
+             fontSize: 16.0,
+             color: accentColor,
+           ),
          ),
        ),
      ),
@@ -33,7 +36,7 @@ class MenuSection extends StatelessWidget {
           child: Column(
             children: menuOptions.map<Widget>((item) {
               return Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.fromLTRB(20,8,20,8),
                   child: ListTile(
                       tileColor: backgroundColor,
                     shape: const RoundedRectangleBorder(
@@ -41,6 +44,7 @@ class MenuSection extends StatelessWidget {
                     ),
                     title: Text(
                     item.label,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: accentColor,
                         fontSize: 16.0,

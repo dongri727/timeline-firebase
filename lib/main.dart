@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       platform: Theme.of(context).platform,
       t: Timeline(Theme.of(context).platform),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'CHOP SHOP',
         theme: ThemeData(
             useMaterial3: true),

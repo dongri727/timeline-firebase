@@ -21,6 +21,7 @@ class MainMenuWidgetState extends State<MainMenuWidget> {
   /// This data is loaded from the asset bundle during [initState()]
   final MenuData _menu = MenuData();
 
+
   /// Helper function which sets the [MenuItemData] for the [TimelineWidget].
   /// This will trigger a transition from the current menu to the Timeline,
   /// thus the push on the [Navigator], this widget will know where to scroll to.
@@ -46,6 +47,8 @@ class MainMenuWidgetState extends State<MainMenuWidget> {
   @override
   Widget build(BuildContext context) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
+    final controller = TextEditingController();
+    final timeline = BlocProvider.getTimeline(context);
 
     List<Widget> tail = [];
 
@@ -72,16 +75,60 @@ class MainMenuWidgetState extends State<MainMenuWidget> {
         child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: FormatGrey(
-                    hintText: "Search Term",
-                    onChanged: (text) {},
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20,20,5,20),
+                        child: FormatGrey(
+                          controller: controller,
+                          hintText: "Search Term",
+                          onChanged: (text) {
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(5,20,20,20),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            timeline.loadFromFirestore('events', country: controller.text.isNotEmpty
+                            ? controller.text
+                            : null);
+
+                            showDialog(
+                              barrierDismissible: false,
+                                context: context,
+                                builder: (BuildContext context){
+                                  return AlertDialog(
+                                    title: const Text('Successfully Selected'),
+                                    content: const Text('Choose an Era and Move On'),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () => Navigator.pop(context),
+                                          child: const Text('OK')),
+                                    ],
+                                  );
+                                });
+                          },
+                          child: const Icon(Icons.done),
+                        ),),
+                    )
+                  ],
                 ),
+                Center(
+                  child: ElevatedButton(
+                      onPressed: (){
+                        controller.clear();
+                        timeline.loadFromFirestore('events',country: null);
+                      },
+                      child: Text('clear')),
+                )
               ] + tail),
         ),
       );
-
   }
 }

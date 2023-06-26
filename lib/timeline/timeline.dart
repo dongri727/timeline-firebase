@@ -191,13 +191,13 @@ class Timeline {
   /// This function will load from firestore,
   /// and populate all the [TimelineEntry]s.
   Future<List<TimelineEntry>> loadFromFirestore(
-      String collectionPath) async {
+      String collectionPath, {String? country}) async {
 
     List<TimelineEntry> allEntries = [];
     _tickColors = [];
 
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(collectionPath)
-        .where("country", isEqualTo: "Greece")
+        .where("country", isEqualTo: country)
         .get();
     List<DocumentSnapshot> docSnapshots = querySnapshot.docs;
 

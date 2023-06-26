@@ -148,55 +148,12 @@ class TimelineWidgetState extends State<TimelineWidget> {
     super.initState();
     //if (timeline != null) {
       widget.timeline.isActive = true;
-/*      _positionName = timeline.currentPosition != null
-          ? timeline.currentPosition.label
-          : defaultPositionName;
-      timeline.onHeaderColorsChanged = (Color background, Color text) {
-        setState(() {
-          _headerTextColor = text;
-          _headerBackgroundColor = background;
-        });
-      };
-
-      /// Update the label for the [Timeline] object.
-      timeline.onPositionChanged = (TimelineEntry entry) {
-        setState(() {
-          _positionName = entry != null ? entry.label : defaultPositionName;
-        });
-      };
-
-      _headerTextColor = timeline.headerTextColor;
-      _headerBackgroundColor = timeline.headerBackgroundColor;
-    }*/
   }
 
   /// Update the current view and change the Timeline header, color and background color,
   @override
   void didUpdateWidget(covariant TimelineWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-/*    if (timeline != oldWidget.timeline && timeline != null) {
-      setState(() {
-        _headerTextColor = timeline.headerTextColor;
-        _headerBackgroundColor = timeline.headerBackgroundColor;
-      });
-
-      timeline.onHeaderColorsChanged = (Color background, Color text) {
-        setState(() {
-          _headerTextColor = text;
-          _headerBackgroundColor = background;
-        });
-      };
-      timeline.onPositionChanged = (TimelineEntry entry) {
-        setState(() {
-          _positionName = entry != null ? entry.label : defaultPositionName;
-        });
-      };
-      setState(() {
-        _positionName =
-            timeline.currentPosition ?? defaultPositionName;
-      });
-    }*/
   }
 
   /// This is a [StatefulWidget] life-cycle method. It's being overridden here

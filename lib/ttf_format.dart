@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class FormatGrey extends StatelessWidget {
+  final TextEditingController controller;
   final String hintText;
   final ValueChanged<String> onChanged;
 
   const FormatGrey({
+    required this.controller,
     required this.hintText,
     required this.onChanged,
     Key? key,
@@ -13,6 +15,7 @@ class FormatGrey extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       textAlign: TextAlign.center,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.all(5.0),
