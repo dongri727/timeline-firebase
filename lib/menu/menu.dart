@@ -105,7 +105,7 @@ class MainMenuWidgetState extends State<MainMenuWidget> {
                                 builder: (BuildContext context){
                                   return AlertDialog(
                                     title: const Text('Successfully Selected'),
-                                    content: const Text('Choose an Era and Move On'),
+                                    content: const Text('Please Choose an Era and Move On'),
                                     actions: [
                                       TextButton(
                                           onPressed: () => Navigator.pop(context),
